@@ -24,7 +24,7 @@ async def format_code(request:CodeRequest)->CodeResponse:
     print(request.code)
     if request.language == "python":
         formate_code = format_python(request.code)
-    elif request.language == "c":
+    elif request.language == "c" or "c_cpp":
         formate_code = format_c(request.code)
     elif request.language == "java":
         formate_code = format_java(request.code)
