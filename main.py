@@ -1,10 +1,11 @@
 from typing import Union
 
 from fastapi import FastAPI
-from models.model import CodeRequest,CodeResponse
+from models.model import CodeRequest, CodeResponse
 from fastapi.middleware.cors import CORSMiddleware
-#importing formating functions
-from formater.formater import format_python,format_c,format_java
+
+# importing formating functions
+from formater.formater import format_python, format_c, format_java
 
 app = FastAPI()
 app.add_middleware(
@@ -15,12 +16,14 @@ app.add_middleware(
     allow_headers=["*"],  # Allows all headers
 )
 
+
 @app.get("/")
 def read_root():
     return {"Hello": "World"}
 
+
 @app.post("/format")
-async def format_code(request:CodeRequest)->CodeResponse:
+async def format_code(request: CodeRequest) -> CodeResponse:
     print(request.code)
     if request.language == "python":
         formate_code = format_python(request.code)
@@ -30,12 +33,18 @@ async def format_code(request:CodeRequest)->CodeResponse:
         formate_code = format_java(request.code)
     else:
         raise Exception(f"Unsupported language: {request.language}")
-    
-    print('Formatted code:')
+
+    print("Formatted code:")
     print(formate_code)
-    
+
     return {
         "status": "success",
-        "formatted_code":formate_code,
-        "language":request.language
+        "formatted_code": formate_code,
+        "language": request.language,
     }
+
+
+if __name__ == "__main__":
+    import uvicorn
+
+    uvicorn.run(app, host="0.0.0.0", port=8000)
